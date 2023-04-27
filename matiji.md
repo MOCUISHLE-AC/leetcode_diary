@@ -1,3 +1,5 @@
+[toc]
+
 # Oj week8
 
 ## 大约MT2121
@@ -349,6 +351,200 @@ int main()
 	}
 }
 ~~~
+
+
+
+# week 9
+
+## AB数对
+
+![image-20230427171911921](C:\Users\LHA\AppData\Roaming\Typora\typora-user-images\image-20230427171911921.png)
+
+![image-20230427171922247](C:\Users\LHA\AppData\Roaming\Typora\typora-user-images\image-20230427171922247.png)
+
+~~~c++
+#include<iostream>
+#include<map>
+using namespace std;
+int a[200001] = { 0 };
+int c = 0;
+int n = 0;
+map <int, int> mymap;
+int main()
+{
+	long long ans = 0;
+	cin >> n >> c;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> a[i];
+		//mapmap<数字，数出现的次数>
+		mymap[a[i]]++;
+		//a[i]-c,用做index
+		a[i] -= c;
+	}
+	for (int i = 0; i < n; i++)
+	{
+		if (mymap.find(a[i])!=mymap.end())
+		{
+			ans += mymap[a[i]];
+		}
+	}
+	cout << ans << endl;
+}
+~~~
+
+## 一样的虫子
+
+![image-20230427181342932](C:\Users\LHA\AppData\Roaming\Typora\typora-user-images\image-20230427181342932.png)
+
+![image-20230427181402522](C:\Users\LHA\AppData\Roaming\Typora\typora-user-images\image-20230427181402522.png)
+
+![image-20230427181415185](C:\Users\LHA\AppData\Roaming\Typora\typora-user-images\image-20230427181415185.png)
+$$
+Hash(a[i])=sum(a[i])+multiply(a[i])
+$$
+
+~~~c++
+#include<iostream>
+#include<map>
+#include<algorithm>
+#include<math.h>
+using namespace std;
+map <long long, int> mymap;
+int a[100005][6];
+int n;
+long long func(int i)
+{
+	long long sum = 0;
+	long long times = 1;
+	for (int j = 0; j < 6; j++)
+	{
+		sum += a[i][j];
+		times *= a[i][j];
+	}
+	return (sum + times);
+}
+
+bool equal(int index1, int index2)
+{
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			bool flag = true;
+			//顺->
+			for (int k = 0; k < 6; k++)
+			{
+				if (a[index1][(i + k) % 6] != a[index2][(j+k)%6])
+				{
+					flag = false;
+					break;
+				}
+			}
+			if (flag)
+			{
+				return 1;
+			}
+			//逆<-
+			flag = true;
+			for (int k = 0; k < 6; k++)
+			{
+				if (a[index1][(i + k) % 6] != a[index2][(j - k+6) % 6])
+				{
+					flag = false;
+					break;
+				}
+			}
+			if (flag)
+			{
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+int main()
+{
+	//map: key=sum + multiply
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			cin >> a[i][j];
+		}
+	}
+
+	for (int i = 0; i < n; i++)
+	{
+		long long temp = func(i);
+		if(mymap.find(temp)==mymap.end())
+			mymap[temp]=i;
+		else
+		{
+			if (equal(i, mymap[temp]))
+			{
+				cout << "found." << endl;
+				return 0;
+			}
+		}
+	}
+	cout << "No" << endl;
+}
+~~~
+
+## 单词分类
+
+![image-20230427194424687](C:\Users\LHA\AppData\Roaming\Typora\typora-user-images\image-20230427194424687.png)
+
+![image-20230427194435116](C:\Users\LHA\AppData\Roaming\Typora\typora-user-images\image-20230427194435116.png)
+
+~~~c++
+#include<iostream>
+#include<map>
+#include<algorithm>
+#include<math.h>
+#include<string>
+#include<string.h>
+using namespace std;
+int n;
+char a[10005][105];
+map<string, int> mymap;
+string func(int i)
+{
+	string mytemp;
+	int temp[30] = { 0 };
+	for (int j = 0; j < strlen(a[i]); j++)
+	{
+		temp[a[i][j] - 'A']++;
+	}
+	for (int j = 0; j < 26; j++)
+	{
+		mytemp += char('0' + temp[j]);
+	}
+	return mytemp;
+}
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> a[i];
+	}
+	for (int i = 0; i < n; i++)
+	{
+		//cout << func(i) << endl;
+		//map : string -> int
+		mymap[func(i)]++;
+	}
+	cout << mymap.size() << endl;
+}
+~~~
+
+
+
+
 
 
 
